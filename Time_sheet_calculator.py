@@ -61,6 +61,10 @@ def weekend_days(list1,list2,a,b,c='No',d='No'):
     
     p = hr * higher_rate
     list2.append(p)
+    
+def appendmultiple(list,x=0):
+    for a in list:
+        a.append(x)
 
 def main(name):
     
@@ -69,7 +73,7 @@ def main(name):
     n_hours = []
     h_hours = []
     p_normal = []
-    p_higher = []
+    p_higher = []    
     
     for i in range(df.shape[0] - 1):                        
         idx1,idx2=i,i+1                         
@@ -78,8 +82,7 @@ def main(name):
             if row1['Nights'] == 'Yes':
                 if row1['Start']>=start_higher:
                     night(h_hours,p_higher,row1['Start'],row2['End'],row1['Paid Lunch?'])
-                    n_hours.append(0)
-                    p_normal.append(0)
+                    appendmultiple([n_hours,p_normal])
                 else:
                     night(start_higher,row2['End'],row1['Paid Lunch?'])
                     night_cheaper(n_hours,p_normal,start = row1['Start'])
@@ -87,8 +90,7 @@ def main(name):
             else:
                 if row1['Start']>=end_higher and row1['End']<=start_higher:
                     nh(n_hours,p_normal,row1['Start'],row1['End'],row1['Paid Lunch?'])
-                    h_hours.append(0)
-                    p_higher.append(0)
+                    appendmultiple([h_hours, p_higher])
                     
                 elif row1['Start']<end_higher and row1['End']<=start_higher:
                     nh(n_hours,p_normal,end_higher,row1['End'],row1['Paid Lunch?'])
@@ -99,52 +101,38 @@ def main(name):
                     hh(h_hours,p_higher,end = row1['End'])        
                 
                 else:                           
-                    n_hours.append(0)
-                    h_hours.append(0)
-                    p_normal.append(0)
-                    p_higher.append(0)
+                    appendmultiple([n_hours,p_normal,h_hours,p_higher])
                     
         elif row1['Day'] == 'Sat':
             if row1['Nights'] == 'Yes':
                 night(h_hours,p_higher,row1['Start'],row2['End'],row1['Paid Lunch?'])
-                n_hours.append(0)
-                p_normal.append(0)
+                appendmultiple([n_hours,p_normal])
             else:
                 if str(row1['Start']) == 'nan':
-                    n_hours.append(0)
-                    h_hours.append(0)
-                    p_normal.append(0)
-                    p_higher.append(0)
+                    appendmultiple([n_hours,p_normal,h_hours,p_higher])
                 else:
                     weekend_days(h_hours,p_higher,row1['Start'],row1['End'],row1['Paid Lunch?'])
-                    n_hours.append(0)
-                    p_normal.append(0)
+                    appendmultiple([n_hours,p_normal])
                    
         elif row1['Day'] == 'Sun':
             if row1['Nights'] == 'Yes':
                 if row2['End']<=end_higher:
                     night(h_hours,p_higher,row1['Start'],row2['End'],row1['Paid Lunch?'])
-                    n_hours.append(0)
-                    p_normal.append(0)
+                    appendmultiple([n_hours,p_normal])
                 else:
                     night(h_hours,p_higher,row1['Start'],end_higher,row1['Paid Lunch?'])
                     night_cheaper(n_hours,p_normal,end = row2['End'])
             else:
                 if str(row1['Start']) == 'nan':
-                    n_hours.append(0)
-                    h_hours.append(0)
-                    p_normal.append(0)
-                    p_higher.append(0)
+                    appendmultiple([n_hours,p_normal,h_hours,p_higher])
                 else:
                     weekend_days(h_hours,p_higher,row1['Start'],row1['End'],row1['Paid Lunch?'])
-                    n_hours.append(0)
-                    p_normal.append(0)
+                    appendmultiple([n_hours,p_normal])
         else:
             if row1['Nights'] == 'Yes':
                 if row1['Start']>=start_higher and row2['End']<=end_higher:
                     night(h_hours,p_higher,row1['Start'],row2['End'],row1['Paid Lunch?'])
-                    n_hours.append(0)
-                    p_normal.append(0)
+                    appendmultiple([n_hours,p_normal])
                     
                 elif row1['Start']>=start_higher and row2['End']>end_higher:
                     night(h_hours,p_higher,row1['Start'],end_higher,row1['Paid Lunch?'])
@@ -161,8 +149,7 @@ def main(name):
             else:
                 if row1['Start']>=end_higher and row1['End']<=start_higher:
                     nh(n_hours,p_normal,row1['Start'],row1['End'],row1['Paid Lunch?'])
-                    h_hours.append(0)
-                    p_higher.append(0)
+                    appendmultiple([h_hours, p_higher])
                     
                 elif row1['Start']<end_higher and row1['End']<=start_higher:
                     nh(n_hours,p_normal,end_higher,row1['End'],row1['Paid Lunch?'])
@@ -173,10 +160,7 @@ def main(name):
                     hh(h_hours,p_higher,end = row1['End'])        
                 
                 else:                           
-                    n_hours.append(0)
-                    h_hours.append(0)
-                    p_normal.append(0)
-                    p_higher.append(0)
+                    appendmultiple([n_hours,p_normal,h_hours,p_higher])
     
     df1 = pd.DataFrame({'Hours NR':n_hours,
                         'Invoice NR':p_normal,
